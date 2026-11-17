@@ -3,9 +3,9 @@
 #include <serial.h>
 #include <Delay.h>
 
-#define NODE_A  1     /* A°åĞ´1£¬B°åĞ´0 */
+#define NODE_A  1     /* Aæ¿å†™1ï¼ŒBæ¿å†™0 */
 
-/* CAN ³õÊ¼»¯£ººÍ L1 Ò»Ñù£¬Ö»°ÑÄ£Ê½¸Ä³É Normal */
+/* CAN åˆå§‹åŒ–ï¼šå’Œ L1 ä¸€æ ·ï¼ŒåªæŠŠæ¨¡å¼æ”¹æˆ Normal */
 void CAN_Node_Init(void)
 {
     GPIO_InitTypeDef        gpio;
@@ -27,12 +27,12 @@ void CAN_Node_Init(void)
     CAN_DeInit(CAN1);
     CAN_StructInit(&can);
     can.CAN_TTCM = DISABLE;
-    can.CAN_ABOM = ENABLE;                 /* BUS-OFF ×Ô¶¯»Ö¸´£¬L4 ÒªÓÃ */
+    can.CAN_ABOM = ENABLE;                 /* BUS-OFF è‡ªåŠ¨æ¢å¤ï¼ŒL4 è¦ç”¨ */
     can.CAN_AWUM = ENABLE;
-    can.CAN_NART = DISABLE;                /* ·´Âß¼­£ºDISABLE = ÔÊĞí³ö´í×Ô¶¯ÖØ·¢ */
+    can.CAN_NART = DISABLE;                /* åé€»è¾‘ï¼šDISABLE = å…è®¸å‡ºé”™è‡ªåŠ¨é‡å‘ */
     can.CAN_RFLM = DISABLE;
-    can.CAN_TXFP = DISABLE;                /* °´ ID ÓÅÏÈ¼¶·¢ */
-    can.CAN_Mode = CAN_Mode_Normal;        /* ¡û L1 ÊÇ LoopBack£¬ÕâÀïÊÇ Normal */
+    can.CAN_TXFP = DISABLE;                /* æŒ‰ ID ä¼˜å…ˆçº§å‘ */
+    can.CAN_Mode = CAN_Mode_Normal;        /* â† L1 æ˜¯ LoopBackï¼Œè¿™é‡Œæ˜¯ Normal */
     can.CAN_SJW  = CAN_SJW_1tq;
     can.CAN_BS1  = CAN_BS1_5tq;
     can.CAN_BS2  = CAN_BS2_2tq;
@@ -44,14 +44,14 @@ void CAN_Node_Init(void)
     filter.CAN_FilterScale          = CAN_FilterScale_32bit;
     filter.CAN_FilterIdHigh         = 0x0000;
     filter.CAN_FilterIdLow          = 0x0000;
-    filter.CAN_FilterMaskIdHigh     = 0x0000;   /* ÑÚÂëÈ«0 = È«½ÓÊÕ */
+    filter.CAN_FilterMaskIdHigh     = 0x0000;   /* æ©ç å…¨0 = å…¨æ¥æ”¶ */
     filter.CAN_FilterMaskIdLow      = 0x0000;
     filter.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
     filter.CAN_FilterActivation     = ENABLE;
     CAN_FilterInit(&filter);
 }
 
-/* ´ò°ü£ºÎïÀíÁ¿ ¡ú 8 ×Ö½Ú£¨¹ı¶É¿ÎµÄº¯Êı£¬Ô­Ñù°á¹ıÀ´£© */
+/* æ‰“åŒ…ï¼šç‰©ç†é‡ â†’ 8 å­—èŠ‚ï¼ˆè¿‡æ¸¡è¯¾çš„å‡½æ•°ï¼ŒåŸæ ·æ¬è¿‡æ¥ï¼‰ */
 void EngineData_Pack(uint8_t *d, uint16_t rpm, uint8_t kmh, uint8_t thr_pct, int8_t temp_c)
 {
     uint16_t r = rpm * 4;
@@ -63,7 +63,7 @@ void EngineData_Pack(uint8_t *d, uint16_t rpm, uint8_t kmh, uint8_t thr_pct, int
     d[4] = t;  d[5] = c;  d[6] = 0;  d[7] = 0;
 }
 
-/* ½â°ü + ´òÓ¡£º8 ×Ö½Ú ¡ú ÈËÄÜ¿´¶®µÄÊı */
+/* è§£åŒ… + æ‰“å°ï¼š8 å­—èŠ‚ â†’ äººèƒ½çœ‹æ‡‚çš„æ•° */
 void EngineData_Show(const uint8_t *d)
 {
     uint16_t r = (uint16_t)d[0] | ((uint16_t)d[1] << 8);
@@ -79,11 +79,11 @@ int main(void)
     CanRxMsg rx;
     uint8_t i;
 
-    Serial_Init();            /* Äã¹¤³ÌÀïµÄ´®¿Ú³õÊ¼»¯£¬9600 */
+    Serial_Init();            /* å·¥ç¨‹é‡Œçš„ä¸²å£åˆå§‹åŒ–ï¼Œ115200 */
     CAN_Node_Init();
 
 #if NODE_A
-    /* ===== A °å£ºÖ»·¢£¬Ã¿ 500ms Ò»Ö¡£¬×ªËÙ»ºÂı±ä»¯ ===== */
+    /* ===== A æ¿ï¼šåªå‘ï¼Œæ¯ 500ms ä¸€å¸§ï¼Œè½¬é€Ÿç¼“æ…¢å˜åŒ– ===== */
     uint16_t rpm = 1000;
     printf("NODE A: send 0x100 every 500ms\r\n");
 
@@ -103,7 +103,7 @@ int main(void)
         Delay_ms(500);
     }
 #else
-    /* ===== B °å£ºÖ»ÊÕ£¬ÊÕµ½¾Í´òÓ¡ ===== */
+    /* ===== B æ¿ï¼šåªæ”¶ï¼Œæ”¶åˆ°å°±æ‰“å° ===== */
     printf("NODE B: wait for 0x100\r\n");
 
     while (1)
