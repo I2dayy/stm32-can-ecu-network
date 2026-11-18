@@ -1,0 +1,10 @@
+Objects/
+Listings/
+DebugConfig/
+*.uvoptx
+*.uvguix.*
+*.bak
+*.hex
+*.axf
+*.o
+*.d

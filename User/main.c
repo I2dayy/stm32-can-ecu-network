@@ -3,7 +3,7 @@
 #include <serial.h>
 #include <Delay.h>
 
-#define NODE_A  1     /* A板写1，B板写0 */
+#define NODE_A  0     /* A板写1，B板写0 */
 
 /* CAN 初始化：和 L1 一样，只把模式改成 Normal */
 void CAN_Node_Init(void)
